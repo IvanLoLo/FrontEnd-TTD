@@ -19,6 +19,16 @@
         Correo electrónico:
         <span>{{ userDetailById.email }}</span>
       </h2>
+
+      <h2>
+        Nombre:
+        <span>{{ userDetailById.name }} {{ userDetailById.lastName }}</span>
+      </h2>
+
+      <h2>
+        Direccion:
+        <span>{{ userDetailById.address }}</span>
+      </h2>
     </div>
   </div>
   
@@ -38,7 +48,9 @@ export default {
       userDetailById: {
         username: "",
         name: "",
+        lastName: "",
         email: "",
+        address: "",
       },
     };
   },
@@ -50,7 +62,9 @@ export default {
           userDetailById(userId: $userId) {
             username
             name
+            lastName
             email
+            address
           }
         }
       `,
@@ -104,11 +118,12 @@ export default {
   font-size: 35px;
   color: #283747;
 }
+
 .details {
   border: 3px solid rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   padding: 30px 80px;
-  margin: 30px 0 0 0;
+  margin: 0 0 20px 0;
 }
 
 </style>

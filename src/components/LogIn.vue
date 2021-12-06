@@ -59,6 +59,7 @@ export default {
           this.$emit("completedLogIn", dataLogIn);
         })
         .catch((error) => {
+          console.log("Error en el LogIn "+error);
           alert("ERROR 401: Credenciales Incorrectas.");
         });
     },
@@ -81,7 +82,7 @@ export default {
     }
 
     .container_logIn_user {
-        border: 3px solid  #283747;
+        border: 3px solid  #4b3019;
         border-radius: 10px;
         width: 25%;
         height: 60%;
@@ -93,7 +94,7 @@ export default {
     }
 
     .logIn_user h2{
-        color: #283747;
+        color: #4b3019;
 
     }
 
@@ -118,7 +119,7 @@ export default {
         height: 40px;
 
         color: #E5E7E9;
-        background: #283747;
+        background: #4b3019;
         border: 1px solid #E5E7E9;
 
         border-radius: 5px;
@@ -128,7 +129,7 @@ export default {
 
     .logIn_user button:hover{
         color: #E5E7E9;
-        background: crimson;
+        background: #135700;
         border: 1px solid #283747;
     }
 

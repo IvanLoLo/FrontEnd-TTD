@@ -43,7 +43,7 @@ export default {
         username: "",
         password: "",
         name: "",
-        lastname: "",
+        lastName: "",
         email: "",
         address: "",
       },
