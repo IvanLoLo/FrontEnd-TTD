@@ -5,7 +5,8 @@
       <img src="./assets/logo.png" alt="Logo-TTDOOR" />
       <nav>
         <button v-if="is_auth" v-on:click="loadHome">Inicio</button>
-        <button v-if="is_auth" v-on:click="loadAccount">PQRS</button>
+        <!-- <button v-if="is_auth" v-on:click="loadAccount">Account</button> -->
+        <button v-if="is_auth" v-on:click="loadPQR">PQRS</button>
         <!--  <button v-if="is_auth" v-on:click="loadTransaction"> Transacción </button> -->
         <button v-if="is_auth" v-on:click="logOut">Cerrar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadLogIn">Iniciar Sesión</button>
@@ -69,6 +70,10 @@ export default {
 
     loadAccount: function() {
       this.$router.push({ name: "account" });
+    },
+
+    loadPQR: function() {
+      this.$router.push({ name: "pqr" });
     },
 
     loadTransaction: function() {

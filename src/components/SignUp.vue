@@ -13,7 +13,7 @@
         <input type="text" v-model="user.name" placeholder="Nombre" />
         <br />
 
-        <input type="text" v-model="user.lastname" placeholder="Apellido" />
+        <input type="text" v-model="user.lastName" placeholder="Apellido" />
         <br />
 
         <input type="email" v-model="user.email" placeholder="Correo" />
@@ -43,7 +43,7 @@ export default {
         username: "",
         password: "",
         name: "",
-        lastname: "",
+        lastName: "",
         email: "",
         address: "",
       },

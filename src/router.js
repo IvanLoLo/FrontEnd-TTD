@@ -6,38 +6,46 @@ import LogIn from './components/LogIn.vue'
 import SignUp from './components/SignUp.vue'
 import Home from './components/Home.vue'
 import Account from './components/Account.vue'
+import PQR from "./components/PQR.vue";
 import Transaction from './components/Transaction.vue'
 
-const routes = [{
-        path: '/user/logIn',
-        name: "logIn",
-        component: LogIn,
-        meta: { requiresAuth: false }
-    },
-    {
-        path: '/user/signUp',
-        name: "signUp",
-        component: SignUp,
-        meta: { requiresAuth: false }
-    },
-    {
-        path: '/user/home',
-        name: "home",
-        component: Home,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/user/account',
-        name: "account",
-        component: Account,
-        meta: { requiresAuth: true }
-    },
-    {
-        path: '/user/transaction',
-        name: "transaction",
-        component: Transaction,
-        meta: { requiresAuth: true }
-    }
+const routes = [
+  {
+    path: "/user/logIn",
+    name: "logIn",
+    component: LogIn,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: "/user/signUp",
+    name: "signUp",
+    component: SignUp,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: "/user/home",
+    name: "home",
+    component: Home,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/user/account",
+    name: "account",
+    component: Account,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/user/pqr",
+    name: "pqr",
+    component: PQR,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/user/transaction",
+    name: "transaction",
+    component: Transaction,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
@@ -46,9 +54,8 @@ const router = createRouter({
 });
 
 const apolloClient = new ApolloClient({
-  //link: createHttpLink({ uri: 'https://mision-tic-api-gateway.herokuapp.com/' }),
-  link: createHttpLink({ uri: "https://banco-c4-api-gateway.herokuapp.com/" }),
-  //link: createHttpLink({ uri: "https://docker-authentication.herokuapp.com" }),
+  //link: createHttpLink({ uri: "https://banco-c4-api-gateway.herokuapp.com/" }),
+  link: createHttpLink({ uri: "https://ttd-gateway.herokuapp.com/" }),
   cache: new InMemoryCache(),
 });
 
