@@ -10,7 +10,6 @@ import { createApolloProvider } from "@vue/apollo-option";
 import { setContext } from "apollo-link-context";
 
 const httpLink = createHttpLink({
-  //uri: "https://banco-c4-api-gateway.herokuapp.com/",
   uri: "https://ttd-gateway.herokuapp.com/",
 });
 

@@ -1,18 +1,12 @@
 <template>
   <div id="Historial">
     <div>
-      <h1>Peticiones, Quejas, Reclamos y Sugerencias (PQRS)</h1>
-      <h3>
-        Bienvenido
-        <span>{{ username }}.</span>
-        En este apartado podrás solitiar soporte, queja o reclamo a tus pedidos.
-      </h3>
-      <img class="logo2" src="../assets/logo2.png" alt="" />
+      <h1>Detalles de seguimiento de pedidos</h1>
     </div>
     <div class="container">
       <form v-on:submit.prevent="processpqr">
-        <h2>
-          Seleccione el tipo de solicitud:
+<!--         <h2>
+          Lista de pedidos ordenados por el usuario:
         </h2>
         <select
           name="tipo"
@@ -24,26 +18,9 @@
           <option>Queja</option>
           <option>Reclamo</option>
           <option>Sugerencia</option>
-        </select>
-        <h2>
-          Comentanos tu inquietud:
-        </h2>
-        <input
-          type="text"
-          v-model="editpqr.pqr"
-          placeholder="Comenta tus inquietudes en este espacio..."
-        />
+        </select> -->
         <br />
-        <h2>
-          Ingresa el número de rastreo del pedido de tu inquietud:
-        </h2>
-        <input
-          type="text"
-          v-model="editpqr.id"
-          placeholder="Número de rastreo"
-        />
-        <br />
-        <h2>Seleccione el domicilio de la PQRS a realizar:</h2>
+        <h2>Lista de pedidos ordenados por el usuario:</h2>
         <div class="container-table">
           <table>
             <tr>
@@ -52,6 +29,10 @@
               <th>Fecha última novedad</th>
               <th>Usuario Origen</th>
               <th>Usuario Destino</th>
+              <th>Ciudad de Origen</th>
+              <th>Dirección de Origen</th>
+              <th>Ciudad de Destino</th>
+              <th>Dirección de Destino</th>
               <th>Descripción</th>
               <th>Estado</th>
               <th>Valor</th>
@@ -65,6 +46,10 @@
               <td>{{ pqr.pickUpDate.substring(0, 10) }}</td>
               <td>{{ pqr.usernameEmisor }}</td>
               <td>{{ pqr.usernameReceptor }}</td>
+              <td>{{ pqr.ciudadOrigen }}</td>
+              <td>{{ pqr.direccionOrigen }}</td>
+              <td>{{ pqr.ciudadDestino }}</td>
+              <td>{{ pqr.direccionDestino }}</td>
               <td>{{ pqr.description }}</td>
               <td>{{ pqr.estado }}</td>
               <td>{{ pqr.value }}</td>
@@ -75,8 +60,11 @@
             </tr>
           </table>
         </div>
-        <button id="enviar" type="submit" onClick="guardar()">Enviar</button>
+        <!-- <button id="enviar" type="submit" onClick="guardar()">Enviar</button> -->
       </form>
+    </div>
+    <div id="seguimiento">
+      <!-- <img src="../assets/recogida.png" alt="" /> -->
     </div>
   </div>
 </template>
@@ -85,7 +73,7 @@
 import gql from "graphql-tag";
 
 export default {
-  name: "PQR",
+  name: "detalles",
 
   data: function() {
     return {
@@ -116,6 +104,104 @@ export default {
   },
   //// PQRS
   methods: {
+    Rastreo() {
+      /*       const ultimateDelivery = this.deliveriesByUsername.length;
+      const id = ultimateDelivery.id;
+      const estado2 = ultimateDelivery.estado;
+      console.log(this.$apollo.queries.deliveriesByUsername.refetch());
+      console.log(id);
+      console.log(estado2); */
+
+      const estado = "Entregado";
+      const seguimiento = document.getElementById("recogida");
+      const seguimiento2 = document.getElementById("despacho");
+      const seguimiento3 = document.getElementById("bodega");
+      const seguimiento4 = document.getElementById("reparto");
+      const seguimiento5 = document.getElementById("entregado");
+
+      if (estado == "Recogido") {
+        console.log("Recogido");
+        const img = document.createElement("img");
+        img.setAttribute("src", "/recogida.png");
+        seguimiento.appendChild(img);
+
+
+      } else if (estado == "Despacho") {
+        console.log("Despacho");
+
+        const img = document.createElement("img");
+        img.setAttribute("src", "/recogida.png");
+
+        const img2 = document.createElement("img");
+        img2.setAttribute("src", "/despacho.png");
+
+        seguimiento2.appendChild(img);
+        seguimiento2.appendChild(img2);
+
+
+      } else if (estado == "Bodega") {
+        console.log("Bodega");
+
+        const img = document.createElement("img");
+        img.setAttribute("src", "/recogida.png");
+
+        const img2 = document.createElement("img");
+        img2.setAttribute("src", "/despacho.png");
+
+        const img3 = document.createElement("img");
+        img3.setAttribute("src", "/bodega.png");
+
+        seguimiento.appendChild(img);
+        seguimiento2.appendChild(img2);
+        seguimiento3.appendChild(img3);
+        
+      } else if (estado == "Reparto") {
+        console.log("Reparto");
+
+        const img = document.createElement("img");
+        img.setAttribute("src", "/recogida.png");
+
+        const img2 = document.createElement("img");
+        img2.setAttribute("src", "/despacho.png");
+
+        const img3 = document.createElement("img");
+        img3.setAttribute("src", "/bodega.png");
+
+        const img4 = document.createElement("img");
+        img.setAttribute("src", "/reparto.png");
+
+        seguimiento.appendChild(img);
+        seguimiento2.appendChild(img2);
+        seguimiento3.appendChild(img3);
+        seguimiento4.appendChild(img4);
+
+
+      } else if (estado == "Entregado") {
+        console.log("Entregado");
+
+        const img = document.createElement("img");
+        img.setAttribute("src", "/recogida.png");
+
+        const img2 = document.createElement("img");
+        img2.setAttribute("src", "/despacho.png");
+
+        const img3 = document.createElement("img");
+        img3.setAttribute("src", "/bodega.png");
+
+        const img4 = document.createElement("img");
+        img.setAttribute("src", "/reparto.png");
+
+        const img5 = document.createElement("img");
+        img5.setAttribute("src", "/entregado.png");
+
+        seguimiento.appendChild(img);
+        seguimiento2.appendChild(img2);
+        seguimiento3.appendChild(img3);
+        seguimiento4.appendChild(img4);
+        seguimiento5.appendChild(img5);
+      }
+    },
+
     processpqr: async function() {
       if (
         localStorage.getItem("token_access") === null ||
@@ -314,6 +400,7 @@ export default {
 
   created: function() {
     this.$apollo.queries.deliveriesByUsername.refetch();
+    this.Rastreo();
   },
 };
 </script>
@@ -328,7 +415,7 @@ div .main-component {
 div .container {
   display: flex;
   position: absolute;
-  top: 6vh;
+  top: 0vh;
 }
 
 #Historial {
@@ -340,11 +427,11 @@ div .container {
 }
 
 #Historial .container-table {
-  width: 100vh;
+  width: 120vh;
 
-  max-height: 185px;
+  max-height: 250px;
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: scroll;
 }
 
 #Historial table {
