@@ -7,6 +7,10 @@ import SignUp from './components/SignUp.vue'
 import Home from './components/Home.vue'
 import Account from './components/Account.vue'
 import Transaction from './components/Transaction.vue'
+import Services from './components/Services.vue'
+import FormService from './components/FormService.vue'
+import Pqr from './components/PQR.vue'
+import Detalles from './components/Detalles.vue'
 
 const routes = [{
         path: '/user/logIn',
@@ -37,7 +41,37 @@ const routes = [{
         name: "transaction",
         component: Transaction,
         meta: { requiresAuth: true }
-    }
+    },
+    {
+        path: '/user/services',
+        name: "services",
+        component: Services,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/services/new',
+        name: "formServicesNew",
+        component: FormService,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/services/edit/:deliver',
+        name: "formServicesEdit",
+        component: FormService,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: "/user/pqr",
+        name: "pqr",
+        component: Pqr,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: "/user/detalles",
+        name: "detalles",
+        component: Detalles,
+        meta: { requiresAuth: true },
+    },
 ];
 
 const router = createRouter({
@@ -46,9 +80,7 @@ const router = createRouter({
 });
 
 const apolloClient = new ApolloClient({
-  //link: createHttpLink({ uri: 'https://mision-tic-api-gateway.herokuapp.com/' }),
-  link: createHttpLink({ uri: "https://banco-c4-api-gateway.herokuapp.com/" }),
-  //link: createHttpLink({ uri: "https://docker-authentication.herokuapp.com" }),
+  link: createHttpLink({ uri: "https://ttd-gateway.herokuapp.com/" }),
   cache: new InMemoryCache(),
 });
 

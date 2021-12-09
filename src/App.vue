@@ -4,9 +4,10 @@
       <h1>Transport To Door</h1>
       <img src="./assets/logo.png" alt="Logo-TTDOOR" />
       <nav>
-        <button v-if="is_auth" v-on:click="loadHome">Inicio</button>
-        <button v-if="is_auth" v-on:click="loadAccount">PQRS</button>
-        <!--  <button v-if="is_auth" v-on:click="loadTransaction"> Transacción </button> -->
+        <button v-if="is_auth" v-on:click="loadHome">Cuenta</button>
+        <button v-if="is_auth" v-on:click="loadServices">Pedidos</button>
+        <button v-if="is_auth" v-on:click="loadPQR">PQRS</button>
+        <button v-if="is_auth" v-on:click="loadDetalles">Detalles</button>
         <button v-if="is_auth" v-on:click="logOut">Cerrar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadLogIn">Iniciar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadSignUp">Registrarse</button>
@@ -18,6 +19,8 @@
         v-on:completedLogIn="completedLogIn"
         v-on:completedSignUp="completedSignUp"
         v-on:logOut="logOut"
+        v-on:loadFormNew="loadFormNew"
+        v-on:loadFormEdit="loadFormEdit"
       >
       </router-view>
     </div>
@@ -67,6 +70,26 @@ export default {
       this.$router.push({ name: "home" });
     },
 
+    loadServices: function() {
+      this.$router.push({ name: "services" });
+    },
+
+    loadFormNew: function() {
+      this.$router.push({ name: "formServicesNew" });
+    },
+
+    loadFormEdit: function(id) {
+      this.$router.push({ name: "formServicesEdit", params: { deliver: id} });
+    },
+
+    loadPQR: function() {
+      this.$router.push({ name: "pqr" });
+    },
+
+    loadDetalles: function() {
+      this.$router.push({ name: "detalles" });
+    },
+    
     loadAccount: function() {
       this.$router.push({ name: "account" });
     },
@@ -127,6 +150,7 @@ body {
 
   border-radius: 5px;
   padding: 10px 20px;
+  margin-right: 10px;
 }
 
 .header nav button:hover {
