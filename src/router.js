@@ -67,7 +67,7 @@ const routes = [{
         meta: { requiresAuth: true },
     },
     {
-        path: "/user/detalles",
+        path: "/user/detalles/:deliver",
         name: "detalles",
         component: Detalles,
         meta: { requiresAuth: true },

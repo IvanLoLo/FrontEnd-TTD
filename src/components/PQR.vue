@@ -10,14 +10,14 @@
       <img class="logo2" src="../assets/logo2.png" alt="" />
     </div>
     <div class="container">
-      <form v-on:submit.prevent="processpqr">
+      <form v-on:submit.prevent="procesar($event)">
         <h2>
           Seleccione el tipo de solicitud:
         </h2>
         <select
           name="tipo"
           type="text"
-          v-model="editpqr.estado"
+          v-model="editpqr.tipo"
           placeholder="PQRS"
         >
           <option>Pregunta</option>
@@ -34,48 +34,34 @@
           placeholder="Comenta tus inquietudes en este espacio..."
         />
         <br />
-        <h2>
-          Ingresa el número de rastreo del pedido de tu inquietud:
-        </h2>
-        <input
-          type="text"
-          v-model="editpqr.id"
-          placeholder="Número de rastreo"
-        />
-        <br />
         <h2>Seleccione el domicilio de la PQRS a realizar:</h2>
         <div class="container-table">
           <table>
             <tr>
               <th>Numero de rastreo</th>
-              <th>Fecha de solicitud</th>
-              <th>Fecha última novedad</th>
               <th>Usuario Origen</th>
               <th>Usuario Destino</th>
-              <th>Descripción</th>
+              <th>Ciudad Origen</th>
+              <th>Ciudad Destino</th>
               <th>Estado</th>
-              <th>Valor</th>
               <th>PQRS</th>
-              <!-- <th></th> -->
             </tr>
 
             <tr v-for="pqr in deliveriesByUsername" :key="pqr.id">
               <td>{{ pqr.id }}</td>
-              <td>{{ pqr.deliverDate.substring(0, 10) }}</td>
-              <td>{{ pqr.pickUpDate.substring(0, 10) }}</td>
               <td>{{ pqr.usernameEmisor }}</td>
               <td>{{ pqr.usernameReceptor }}</td>
-              <td>{{ pqr.description }}</td>
+              <td>{{ pqr.ciudadOrigen }}</td>
+              <td>{{ pqr.ciudadDestino }}</td>
               <td>{{ pqr.estado }}</td>
-              <td>{{ pqr.value }}</td>
               <td>{{ pqr.pqr }}</td>
-              <!-- <button class="seleccionar" onClick="seleccionar(pqr.i)">
+              <button class="seleccionar" v-on:click="seleccionar(pqr.id)">
                 Seleccionar
-              </button> -->
+              </button>
             </tr>
           </table>
         </div>
-        <button id="enviar" type="submit" onClick="guardar()">Enviar</button>
+        <button id="enviar" type="submit">Enviar</button>
       </form>
     </div>
   </div>
@@ -91,159 +77,146 @@ export default {
     return {
       username: localStorage.getItem("username") || "none",
       deliveriesByUsername: [],
-
       editpqr: {
-        ////////Registro datos PQRS////
-        usernameEmisor: localStorage.getItem("username"),
-        estado: "",
         pqr: "",
-        id: "",
-        value: localStorage.getItem("value"),
-        usernameReceptor: localStorage.getItem("usernameReceptor"),
-        ciudadOrigen: localStorage.getItem("ciudadOrigen"),
-        ciudadDestino: localStorage.getItem("ciudadDestino"),
-        direccionOrigen: localStorage.getItem("direccionOrigen"),
-        direccionDestino: localStorage.getItem("direccionDestino"),
-        description: localStorage.getItem("description"),
-        pickUpDate: localStorage.getItem("pickUpDate"),
-        deliverDate: localStorage.getItem("deliverDate"),
-      }, ////////
-      /*       fields: [ */
-      ////// Boton seleccionar
-      /*         { key: "id", label: "id" },
-      ], */
+        tipo: "",
+        delivery: "",
+      },
+      infoDelivery: {
+        id: null,
+        usernameEmisor: localStorage.getItem("username"),
+        usernameReceptor: "",
+        ciudadOrigen: "",
+        ciudadDestino: "",
+        direccionOrigen: "",
+        direccionDestino: "",
+        value: null,
+        estado: null,
+        description: null,
+        pickUpDate: null,
+        deliverDate: null,
+        pqr: null,
+      },
     };
   },
   //// PQRS
   methods: {
+    
+    procesar: function(event){
+      if(event.submitter.outerText == "Seleccionar") return;
+      this.processpqr();
+    },
+
+    seleccionar: function(id){
+      console.log("Seleccionado");
+      console.log(id);
+      console.log(this.editpqr.tipo);
+      this.editpqr.delivery = id;
+    },
+
     processpqr: async function() {
-      if (
-        localStorage.getItem("token_access") === null ||
-        localStorage.getItem("token_refresh") === null
-      ) {
-        this.$emit("logOut");
+
+      //Revisar que haya una queja y un tipo
+      if(this.editpqr.pqr.trim() == "" || this.editpqr.pqr == null){
+        alert("Por favor ingrese una queja");
         return;
       }
 
-      localStorage.setItem("token_access", "");
+      if(this.editpqr.tipo.trim() == "" || this.editpqr.tipo == null){
+        alert("Por favor ingrese un tipo de queja");
+        return;
+      }
+
+      //Revisar que se haya escogido un pedido editpqr.delivery != ""
+      if(this.editpqr.delivery.trim() == "" || this.editpqr.delivery == null){
+        alert("Por favor seleccione el pedido sobre el cual desea realizar el comentario");
+        return;
+      }
+
+      //Traer la informacion de ese delivery
 
       await this.$apollo
-        .mutate({
-          mutation: gql`
-            mutation RefreshToken($refresh: String!) {
-              refreshToken(refresh: $refresh) {
-                access
-              }
+      .query({
+        query: gql`
+          query($deliveryId: String!) {
+            deliveryById(deliveryId: $deliveryId) {
+              id
+              usernameEmisor
+              usernameReceptor
+              ciudadOrigen
+              ciudadDestino
+              direccionOrigen
+              direccionDestino
+              description
+              estado
+              value
+              pickUpDate
+              deliverDate
+              pqr
             }
-          `,
-          variables: {
-            refresh: localStorage.getItem("token_refresh"),
-          },
-        })
-        .then((result) => {
-          localStorage.setItem("token_access", result.data.refreshToken.access);
-        })
-        .catch((error) => {
-          this.$emit("logOut");
-          return;
-        });
+          }
+        `,
+        variables: {
+          deliveryId: this.editpqr.delivery,
+        },
+      })
+      .then((result) => {
+        console.log(result);
+        this.infoDelivery = {
+          id: result.data.deliveryById.id,
+          usernameEmisor: result.data.deliveryById.usernameEmisor,
+          usernameReceptor: result.data.deliveryById.usernameReceptor,
+          ciudadOrigen: result.data.deliveryById.ciudadOrigen,
+          ciudadDestino: result.data.deliveryById.ciudadDestino,
+          direccionOrigen: result.data.deliveryById.direccionOrigen,
+          direccionDestino: result.data.deliveryById.direccionDestino,
+          value: result.data.deliveryById.value,
+          estado: result.data.deliveryById.estado,
+          description: result.data.deliveryById.description,
+          pickUpDate: result.data.deliveryById.pickUpDate,
+          deliverDate: result.data.deliveryById.deliverDate,
+          pqr: result.data.deliveryById.pqr,
+        }
+        console.log(this.infoDelivery);
+        if(this.infoDelivery.pqr == null) this.infoDelivery.pqr = "";
+        this.infoDelivery.pqr += this.editpqr.tipo+": "+ this.editpqr.pqr+". ";
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Error trayendo info en PQR");
+      });
+
+      //Editar el delivery con la info de la PQR
 
       await this.$apollo
-        .mutate(
-          localStorage.setItem(
-            "usernameReceptor",
-            this.deliveriesByUsername[0].usernameReceptor
-          ),
-          localStorage.setItem(
-            "ciudadOrigen",
-            this.deliveriesByUsername[0].ciudadOrigen
-          ),
-          localStorage.setItem(
-            "ciudadDestino",
-            this.deliveriesByUsername[0].ciudadDestino
-          ),
-          localStorage.setItem(
-            "direccionDestino",
-            this.deliveriesByUsername[0].direccionDestino
-          ),
-          localStorage.setItem(
-            "direccionOrigen",
-            this.deliveriesByUsername[0].direccionOrigen
-          ),
-          localStorage.setItem("value", this.deliveriesByUsername[0].value),
-          localStorage.setItem(
-            "description",
-            this.deliveriesByUsername[0].description
-          ),
-          localStorage.setItem(
-            "pickUpDate",
-            this.deliveriesByUsername[0].pickUpDate
-          ),
-          localStorage.setItem(
-            "deliverDate",
-            this.deliveriesByUsername[0].deliverDate
-          ),
-          localStorage.setItem("value", this.deliveriesByUsername[0].value),
-          console.log(this.editpqr),
-
-          (editpqr = {
-            ////////Registro datos PQRS////
-            usernameEmisor: localStorage.getItem("username"),
-            estado: "",
-            pqr: "",
-            id: "",
-            value: localStorage.getItem("value"),
-            usernameReceptor: localStorage.getItem("usernameReceptor"),
-            ciudadOrigen: localStorage.getItem("ciudadOrigen"),
-            ciudadDestino: localStorage.getItem("ciudadDestino"),
-            direccionOrigen: localStorage.getItem("direccionOrigen"),
-            direccionDestino: localStorage.getItem("direccionDestino"),
-            description: localStorage.getItem("description"),
-            pickUpDate: localStorage.getItem("pickUpDate"),
-            deliverDate: localStorage.getItem("deliverDate"),
-          }),
-          {
-            mutation: gql`
-              mutation Mutation($delivery: DeliveryInput!) {
-                editDelivery(delivery: $delivery) {
-                  pqr
-                  estado
-                  deliverDate
-                  pickUpDate
-                  description
-                  value
-                  direccionDestino
-                  direccionOrigen
-                  ciudadDestino
-                  ciudadOrigen
-                  usernameReceptor
-                  usernameEmisor
-                  id
-                }
-              }
-            `,
-            variables: {
-              delivery: this.editpqr,
-            },
+      .mutate({
+        mutation: gql`
+          mutation($delivery: DeliveryInput!) {
+            editDelivery(delivery: $delivery) {
+              id
+              usernameEmisor
+              usernameReceptor
+              ciudadOrigen
+              ciudadDestino
+              pqr
+            }
           }
-        )
+        `,
+        variables: {
+          delivery: this.infoDelivery,
+        },
+      })
+      .then((result) => {
+        console.log(result)
+        alert("Servicio editado satisfactoriamente");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Hay un error en la información. Por favor verifique e intente de nuevo");
+      });
 
-        .then((result) => {
-          alert("Solicitud realizada de manera correcta, revise su historial");
-        })
-        .catch((error) => {
-          alert("Error dato incorrecto");
-          console.log(this.editpqr);
-          //console.log(this.deliveriesByUsername);
-        });
     },
-
-    /*     seleccionar(){
-      id = this.username.id;
-      console.log(this.id);
-    } */
   },
-  ////////
 
   apollo: {
     deliveriesByUsername: {
@@ -254,14 +227,8 @@ export default {
             usernameReceptor
             ciudadOrigen
             ciudadDestino
-            direccionOrigen
-            direccionDestino
-            value
-            description
-            estado
-            pickUpDate
-            deliverDate
             id
+            estado
             pqr
           }
         }
@@ -273,48 +240,11 @@ export default {
       },
     },
   },
-  guardar() {
-    localStorage.setItem(
-      "usernameReceptor",
-      this.deliveriesByUsername[0].usernameReceptor
-    );
-    localStorage.setItem(
-      "ciudadOrigen",
-      this.deliveriesByUsername[0].ciudadOrigen
-    );
-    localStorage.setItem(
-      "ciudadDestino",
-      this.deliveriesByUsername[0].ciudadDestino
-    );
-    localStorage.setItem(
-      "direccionDestino",
-      this.deliveriesByUsername[0].direccionDestino
-    );
-    localStorage.setItem(
-      "direccionOrigen",
-      this.deliveriesByUsername[0].direccionOrigen
-    );
-    localStorage.setItem("value", this.deliveriesByUsername[0].value);
-    localStorage.setItem(
-      "description",
-      this.deliveriesByUsername[0].description
-    );
-    localStorage.setItem("pickUpDate", this.deliveriesByUsername[0].pickUpDate);
-    localStorage.setItem(
-      "deliverDate",
-      this.deliveriesByUsername[0].deliverDate
-    );
-    localStorage.setItem("id", this.deliveriesByUsername[0].id);
-    console.log(this.editpqr);
-  },
-
-  seleccionar() {
-    console.log(this.pqr.id);
-  },
 
   created: function() {
     this.$apollo.queries.deliveriesByUsername.refetch();
   },
+
 };
 </script>
 

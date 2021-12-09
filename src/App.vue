@@ -7,7 +7,6 @@
         <button v-if="is_auth" v-on:click="loadHome">Cuenta</button>
         <button v-if="is_auth" v-on:click="loadServices">Pedidos</button>
         <button v-if="is_auth" v-on:click="loadPQR">PQRS</button>
-        <button v-if="is_auth" v-on:click="loadDetalles">Detalles</button>
         <button v-if="is_auth" v-on:click="logOut">Cerrar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadLogIn">Iniciar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadSignUp">Registrarse</button>
@@ -21,6 +20,7 @@
         v-on:logOut="logOut"
         v-on:loadFormNew="loadFormNew"
         v-on:loadFormEdit="loadFormEdit"
+        v-on:loadDetalles="loadDetalles"
       >
       </router-view>
     </div>
@@ -86,10 +86,10 @@ export default {
       this.$router.push({ name: "pqr" });
     },
 
-    loadDetalles: function() {
-      this.$router.push({ name: "detalles" });
+    loadDetalles: function(id) {
+      this.$router.push({ name: "detalles", params: { deliver: id} });
     },
-    
+
     loadAccount: function() {
       this.$router.push({ name: "account" });
     },

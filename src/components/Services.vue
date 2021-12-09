@@ -103,7 +103,7 @@ export default {
       if(event.path[0].textContent == "") return;
       console.log("Ver detalles de "+id);
       //Enviar a la pagina de detalles
-      this.$emit("loadFormEdit", id);
+      this.$emit("loadDetalles", id);
     },
   }
 };
