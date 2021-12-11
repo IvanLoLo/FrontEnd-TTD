@@ -19,7 +19,9 @@
                 </tr>
 
                 <tr v-for="pedido in deliveriesByUsername" :key="pedido.id" v-on:click="detallesServicio(pedido.id, $event)">
-                    <td>{{ date }}</td>
+                    <td v-if="pedido.pickUpDate && !pedido.deliverDate">{{ pedido.pickUpDate.substring(0,10).split("-").reverse().join("/") }}</td>
+                    <td v-if="pedido.deliverDate">{{ pedido.deliverDate.substring(0,10).split("-").reverse().join("/") }}</td>
+                    <td v-if="!pedido.deliverDate">-</td>
                     <td>{{ pedido.usernameEmisor }}</td>
                     <td>{{ pedido.usernameReceptor }}</td>
                     <td>{{ pedido.ciudadOrigen }}</td>
@@ -61,6 +63,8 @@ export default {
         ciudadOrigen: "",
         ciudadDestino: "",
         estado: "",
+        pickUpDate: "",
+        deliverDate: "",
       },
     };
   },
@@ -76,6 +80,8 @@ export default {
             ciudadOrigen
             ciudadDestino
             estado
+            pickUpDate
+            deliverDate
           }
         }
       `,

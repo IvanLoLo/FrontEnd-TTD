@@ -50,15 +50,16 @@
       <h2>
         Fecha de recogida:
         <span v-if="deliveryById.pickUpDate">{{
-          deliveryById.pickUpDate.substring(0, 10)
+          deliveryById.pickUpDate.substring(0, 10).split("-").reverse().join("/")
         }}</span>
         <span v-if="!deliveryById.pickUpDate">El pedido aun no se recoge</span>
       </h2>
 
       <h2>
         Fecha de entrega:
-        <span v-if="deliveryById.deliverDate"
-          >{{ deliveryById.deliverDate.substring(0, 10) }}</span
+        <span v-if="deliveryById.deliverDate">{{ 
+          deliveryById.deliverDate.substring(0, 10).split("-").reverse().join("/") 
+        }}</span
         >
         <span v-if="!deliveryById.pickUpDate">El pedido aun no se entrega</span>
       </h2>

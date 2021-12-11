@@ -22,10 +22,13 @@
                 <textarea name="descripcion" rows="4" v-model="infoDelivery.description" placeholder="Descripción"></textarea>
                 <br>
 
-                <input type="number" v-model="infoDelivery.value" min="10000" placeholder="Precio" required v-if="userId==1">
+                <input type="number" v-model="infoDelivery.value" min="10000" placeholder="Precio" v-if="userId==1">
                 <br>
 
-                <input type="date" v-model="infoDelivery.pickUpDate" v-if="userId==1">
+                <input type="text" v-model="infoDelivery.estado" placeholder="Estado" v-if="userId==1">
+                <br>
+
+                <input type="date" id="fecha" v-model="infoDelivery.pickUpDate" v-if="userId==1">
                 <br>
 
                 <input type="date" v-model="infoDelivery.deliverDate" v-if="userId==1">
@@ -223,6 +226,8 @@ export default {
                     deliverDate: result.data.deliveryById.deliverDate,
                     pqr: result.data.deliveryById.pqr,
                 }
+                if(this.infoDelivery.pickUpDate) this.infoDelivery.pickUpDate = this.infoDelivery.pickUpDate.substring(0,10);
+                if(this.infoDelivery.deliverDate) this.infoDelivery.deliverDate = this.infoDelivery.deliverDate.substring(0,10);
             })
             .catch((error) => {
                 console.log(error);
@@ -255,6 +260,10 @@ export default {
 .container_formService {
     text-align: center;
     width: 30%;
+}
+
+.container_formService h2 {
+    margin-bottom: 0;
 }
 
 #formulario textarea{
