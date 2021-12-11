@@ -49,13 +49,17 @@
 
       <h2>
         Fecha de recogida:
-        <span v-if="deliveryById.pickUpDate">{{ deliveryById.pickUpDate.substring(0, 10) }}</span>
+        <span v-if="deliveryById.pickUpDate">{{
+          deliveryById.pickUpDate.substring(0, 10)
+        }}</span>
         <span v-if="!deliveryById.pickUpDate">El pedido aun no se recoge</span>
       </h2>
 
       <h2>
         Fecha de entrega:
-        <span v-if="deliveryById.deliverDate">${{ deliveryById.deliverDate.substring(0, 10) }}</span>
+        <span v-if="deliveryById.deliverDate"
+          >{{ deliveryById.deliverDate.substring(0, 10) }}</span
+        >
         <span v-if="!deliveryById.pickUpDate">El pedido aun no se entrega</span>
       </h2>
 
@@ -71,29 +75,18 @@
   <div class="image">
     <img src="../assets/recogida.png" alt="Recogida" class="i1" v-show="most" />
     <p>---------</p>
-    <img
-      src="../assets/despacho.png"
-      alt="Despachado"
-      class="i2"
-      v-show="most2"
-    />
+    <img src="../assets/despacho.png" alt="Despachado" class="i2" v-show="most2" />
     <p>---------</p>
     <img src="../assets/bodega.png" alt="En Bodega" class="i3" v-show="most3" />
     <p>---------</p>
-    <img
-      src="../assets/reparto.png"
-      alt="En Reparto"
-      class="i4"
-      v-show="most4"
-    />
+    <img src="../assets/reparto.png" alt="En Reparto" class="i4" v-show="most4" />
     <p>---------</p>
-    <img
-      src="../assets/entregado.png"
-      alt="Entregado"
-      class="i5"
-      v-show="most5"
-    />
+    <img src="../assets/entregado.png" alt="Entregado" class="i5" v-show="most5" />
   </div>
+    <div class="cajaB">
+      <button class="btnE" v-show="mostButton">Editar pedido</button>
+      <button class="btnC" v-show="mostButton">Cancelar pedido</button>
+    </div>
 </template>
 
 <script>
@@ -112,6 +105,7 @@ export default {
       most3: false,
       most4: false,
       most5: false,
+      mostButton: false,
     };
   },
   apollo: {
@@ -138,7 +132,7 @@ export default {
       variables() {
         console.log(this.deliveryById.estado);
         if (this.deliveryById.estado != undefined) {
-          localStorage.setItem("estados", this.deliveryById.estado);
+          //localStorage.setItem("estados", this.deliveryById.estado);
           this.mostrar();
         }
         return {
@@ -150,23 +144,11 @@ export default {
   methods: {
     mostrar() {
       console.log(this.deliveryById.estado);
-      //let estado2 = localStorage.getItem("estados").style;
       let estado2 = this.deliveryById.estado;
-      let estadoImg = document.getElementById("i1");
-      let estadoImg2 = document.getElementsByClassName("i2");
-      let estadoImg3 = document.getElementsByClassName("i3");
-      let estadoImg4 = document.getElementsByClassName("i4");
-      let estadoImg5 = document.getElementsByClassName("i5");
-
-      /*       document.addEventListener("DOMContentLoaded", function() {
-        if (estado2 == "Por recoger") {
-          estadoImg2.style.display = "";
-          console.log("Estado 1");
-        }
-      }); */
       if (estado2 == "Por recoger") {
         this.most = true;
         console.log("Estado 1");
+        this.mostButton = true;
       }
       if (estado2 == "En Despacho") {
         this.most = true;
@@ -193,13 +175,7 @@ export default {
         this.most4 = true;
         this.most5 = true;
         console.log("Estado 5");
-      } /* else {
-        estadoImg.style.display = "none";
-        estadoImg2.style.display = "none";
-        estadoImg3.style.display = "none";
-        estadoImg4.style.display = "none";
-        estadoImg5.style.display = "none";
-      } */
+      }
     },
   },
 };
@@ -219,7 +195,7 @@ export default {
 }
 
 .informacionH h1 {
-  font-size: 3vw;
+  font-size: 2.5vw;
   color: #283747;
 }
 
@@ -227,7 +203,7 @@ export default {
   margin: 0;
   padding: 0%;
   width: 94vw;
-  height: 18vw;
+  height: 15vw;
   margin-left: 2.5%;
   display: flex;
   flex-direction: column;
@@ -240,7 +216,7 @@ export default {
 }
 
 .informacion h2 {
-  font-size: 2vw;
+  font-size: 1.8vw;
   color: #283747;
 }
 
@@ -257,7 +233,7 @@ export default {
 }
 
 .detalles h2 {
-  font-size: 1.6vw;
+  font-size: 1.5vw;
   color: #283747;
 }
 
@@ -269,7 +245,7 @@ export default {
 }
 
 .detalles2 h2 {
-  font-size: 1.6vw;
+  font-size: 1.5vw;
   color: #283747;
 }
 
@@ -301,26 +277,51 @@ export default {
 .i1 {
   padding: 0;
   margin: 1vw;
-  width: 5.5vw;
+  width: 5vw;
 }
 .i2 {
   padding: 0;
   margin: 1vw;
-  width: 5.5vw;
+  width: 4.7vw;
 }
 .i3 {
   padding: 0;
   margin: 1vw;
-  width: 5.5vw;
+  width: 5vw;
 }
 .i4 {
   padding: 0;
   margin: 1vw;
-  width: 5.5vw;
+  width: 5vw;
 }
 .i5 {
   padding: 0;
   margin: 1vw;
-  width: 5.5vw;
+  width: 5.3vw;
+}
+
+/* Botones */
+
+.cajaB{
+  display: flex;
+  margin-right: 5vw;
+  justify-content: right;
+}
+.btnE{
+  width: 110px;
+  padding: 0;
+  margin-top: 0;
+}
+.btnC{
+  width: 120px;
+  padding: 0;
+  margin-top: 0;
+  background-color: brown;
+}
+
+.btnC:hover {
+  color: #ffffff;
+  background: #e90000;
+  border: 1px solid #1f1700;
 }
 </style>

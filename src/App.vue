@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app">
-    <div class="header">
+    <header class="header">
       <h1>Transport To Door</h1>
       <img src="./assets/logo.png" alt="Logo-TTDOOR" />
       <nav>
@@ -11,7 +11,7 @@
         <button v-if="!is_auth" v-on:click="loadLogIn">Iniciar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadSignUp">Registrarse</button>
       </nav>
-    </div>
+    </header>
 
     <div class="main-component">
       <router-view
@@ -25,9 +25,9 @@
       </router-view>
     </div>
 
-    <div class="footer">
+    <footer class="footer">
       <h2>TTDOOR - Misión TIC 2022</h2>
-    </div>
+    </footer>
   </div>
 </template>
 
