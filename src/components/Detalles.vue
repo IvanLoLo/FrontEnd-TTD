@@ -49,12 +49,14 @@
 
       <h2>
         Fecha de recogida:
-        <span>{{ deliveryById.pickUpDate.substring(0, 10) }}</span>
+        <span v-if="deliveryById.pickUpDate">{{ deliveryById.pickUpDate.substring(0, 10) }}</span>
+        <span v-if="!deliveryById.pickUpDate">El pedido aun no se recoge</span>
       </h2>
 
       <h2>
-        Fecha de envío:
-        <span>${{ deliveryById.deliverDate.substring(0, 10) }}</span>
+        Fecha de entrega:
+        <span v-if="deliveryById.deliverDate">${{ deliveryById.deliverDate.substring(0, 10) }}</span>
+        <span v-if="!deliveryById.pickUpDate">El pedido aun no se entrega</span>
       </h2>
 
       <h2>
@@ -199,10 +201,6 @@ export default {
         estadoImg5.style.display = "none";
       } */
     },
-  },
-  created() {
-    this.mostrar();
-    console.log("hola");
   },
 };
 </script>
