@@ -80,12 +80,11 @@ export default {
 
 
 <style>
-
 .information {
   margin: 0;
-  padding: 0%;
-  width: 100%;
-  height: 100%;
+  padding: 0;
+  width: 100vw;
+  height: 40vw;
 
   display: flex;
   flex-direction: column;
@@ -94,12 +93,12 @@ export default {
 }
 
 .information h1 {
-  font-size: 60px;
+  font-size: 3vw;
   color: #283747;
 }
 
 .information h2 {
-  font-size: 40px;
+  font-size: 3vw;
   color: #283747;
 }
 
@@ -109,21 +108,21 @@ export default {
 }
 
 .details h3 {
-  font-size: 35px;
+  font-size: 2.3vw;
   color: #283747;
   text-align: center;
 }
 
 .details h2 {
-  font-size: 35px;
+  font-size: 2vw;
   color: #283747;
 }
 
 .details {
   border: 3px solid rgba(0, 0, 0, 0.3);
   border-radius: 20px;
-  padding: 30px 80px;
-  margin: 0 0 20px 0;
+  padding: 2vw 5vw;
+  margin: 0 0 7.5vw 0;
 }
 
 </style>

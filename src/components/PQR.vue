@@ -101,13 +101,12 @@ export default {
   },
   //// PQRS
   methods: {
-    
-    procesar: function(event){
-      if(event.submitter.outerText == "Seleccionar") return;
+    procesar: function(event) {
+      if (event.submitter.outerText == "Seleccionar") return;
       this.processpqr();
     },
 
-    seleccionar: function(id){
+    seleccionar: function(id) {
       console.log("Seleccionado");
       console.log(id);
       console.log(this.editpqr.tipo);
@@ -115,106 +114,109 @@ export default {
     },
 
     processpqr: async function() {
-
       //Revisar que haya una queja y un tipo
-      if(this.editpqr.pqr.trim() == "" || this.editpqr.pqr == null){
+      if (this.editpqr.pqr.trim() == "" || this.editpqr.pqr == null) {
         alert("Por favor ingrese una queja");
         return;
       }
 
-      if(this.editpqr.tipo.trim() == "" || this.editpqr.tipo == null){
+      if (this.editpqr.tipo.trim() == "" || this.editpqr.tipo == null) {
         alert("Por favor ingrese un tipo de queja");
         return;
       }
 
       //Revisar que se haya escogido un pedido editpqr.delivery != ""
-      if(this.editpqr.delivery.trim() == "" || this.editpqr.delivery == null){
-        alert("Por favor seleccione el pedido sobre el cual desea realizar el comentario");
+      if (this.editpqr.delivery.trim() == "" || this.editpqr.delivery == null) {
+        alert(
+          "Por favor seleccione el pedido sobre el cual desea realizar el comentario"
+        );
         return;
       }
 
       //Traer la informacion de ese delivery
 
       await this.$apollo
-      .query({
-        query: gql`
-          query($deliveryId: String!) {
-            deliveryById(deliveryId: $deliveryId) {
-              id
-              usernameEmisor
-              usernameReceptor
-              ciudadOrigen
-              ciudadDestino
-              direccionOrigen
-              direccionDestino
-              description
-              estado
-              value
-              pickUpDate
-              deliverDate
-              pqr
+        .query({
+          query: gql`
+            query($deliveryId: String!) {
+              deliveryById(deliveryId: $deliveryId) {
+                id
+                usernameEmisor
+                usernameReceptor
+                ciudadOrigen
+                ciudadDestino
+                direccionOrigen
+                direccionDestino
+                description
+                estado
+                value
+                pickUpDate
+                deliverDate
+                pqr
+              }
             }
-          }
-        `,
-        variables: {
-          deliveryId: this.editpqr.delivery,
-        },
-      })
-      .then((result) => {
-        console.log(result);
-        this.infoDelivery = {
-          id: result.data.deliveryById.id,
-          usernameEmisor: result.data.deliveryById.usernameEmisor,
-          usernameReceptor: result.data.deliveryById.usernameReceptor,
-          ciudadOrigen: result.data.deliveryById.ciudadOrigen,
-          ciudadDestino: result.data.deliveryById.ciudadDestino,
-          direccionOrigen: result.data.deliveryById.direccionOrigen,
-          direccionDestino: result.data.deliveryById.direccionDestino,
-          value: result.data.deliveryById.value,
-          estado: result.data.deliveryById.estado,
-          description: result.data.deliveryById.description,
-          pickUpDate: result.data.deliveryById.pickUpDate,
-          deliverDate: result.data.deliveryById.deliverDate,
-          pqr: result.data.deliveryById.pqr,
-        }
-        console.log(this.infoDelivery);
-        if(this.infoDelivery.pqr == null) this.infoDelivery.pqr = "";
-        this.infoDelivery.pqr += this.editpqr.tipo+": "+ this.editpqr.pqr+". ";
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Error trayendo info en PQR");
-      });
+          `,
+          variables: {
+            deliveryId: this.editpqr.delivery,
+          },
+        })
+        .then((result) => {
+          console.log(result);
+          this.infoDelivery = {
+            id: result.data.deliveryById.id,
+            usernameEmisor: result.data.deliveryById.usernameEmisor,
+            usernameReceptor: result.data.deliveryById.usernameReceptor,
+            ciudadOrigen: result.data.deliveryById.ciudadOrigen,
+            ciudadDestino: result.data.deliveryById.ciudadDestino,
+            direccionOrigen: result.data.deliveryById.direccionOrigen,
+            direccionDestino: result.data.deliveryById.direccionDestino,
+            value: result.data.deliveryById.value,
+            estado: result.data.deliveryById.estado,
+            description: result.data.deliveryById.description,
+            pickUpDate: result.data.deliveryById.pickUpDate,
+            deliverDate: result.data.deliveryById.deliverDate,
+            pqr: result.data.deliveryById.pqr,
+          };
+          console.log(this.infoDelivery);
+          if (this.infoDelivery.pqr == null) this.infoDelivery.pqr = "";
+          this.infoDelivery.pqr +=
+            this.editpqr.tipo + ": " + this.editpqr.pqr + ". ";
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Error trayendo info en PQR");
+        });
 
       //Editar el delivery con la info de la PQR
 
       await this.$apollo
-      .mutate({
-        mutation: gql`
-          mutation($delivery: DeliveryInput!) {
-            editDelivery(delivery: $delivery) {
-              id
-              usernameEmisor
-              usernameReceptor
-              ciudadOrigen
-              ciudadDestino
-              pqr
+        .mutate({
+          mutation: gql`
+            mutation($delivery: DeliveryInput!) {
+              editDelivery(delivery: $delivery) {
+                id
+                usernameEmisor
+                usernameReceptor
+                ciudadOrigen
+                ciudadDestino
+                pqr
+              }
             }
-          }
-        `,
-        variables: {
-          delivery: this.infoDelivery,
-        },
-      })
-      .then((result) => {
-        console.log(result)
-        alert("Servicio editado satisfactoriamente");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Hay un error en la información. Por favor verifique e intente de nuevo");
-      });
-
+          `,
+          variables: {
+            delivery: this.infoDelivery,
+          },
+        })
+        .then((result) => {
+          console.log(result);
+          alert("Servicio editado satisfactoriamente");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert(
+            "Hay un error en la información. Por favor verifique e intente de nuevo"
+          );
+        });
     },
   },
 
@@ -244,7 +246,6 @@ export default {
   created: function() {
     this.$apollo.queries.deliveriesByUsername.refetch();
   },
-
 };
 </script>
 
@@ -258,11 +259,11 @@ div .main-component {
 div .container {
   display: flex;
   position: absolute;
-  top: 6vh;
+  top: 5vh;
 }
 
 #Historial {
-  width: 100%;
+  width: 100vw;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -270,9 +271,8 @@ div .container {
 }
 
 #Historial .container-table {
-  width: 100vh;
-
-  max-height: 185px;
+  width: 55vw;
+  max-height: 13vw;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -299,8 +299,8 @@ div .container {
 }
 
 #Historial table th {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 0.2vw;
+  padding-bottom: 0.2vw;
   text-align: center;
   background-color: #9c9d63;
   color: white;
@@ -308,23 +308,27 @@ div .container {
 
 #Historial > h2 {
   color: #4b3019;
-  font-size: 25px;
+  font-size: 1vw;
+}
+
+#Historial h3 {
+  color: #2e1d0f;
+  font-size: 1vw;
 }
 
 #Historial h1 {
   color: #4b3019;
-  font-size: 25px;
+  font-size: 2.2vw;
 }
 
 #Historial .container {
-  padding: 30px;
+  padding: 0vw;
   /* border: 3px solid rgba(0, 0, 0, 0.3); */
   border-radius: 20px;
-  margin: 9% 0 1% 0;
+  margin: 10vw 0 1vw 0;
 }
 
 #Historial .container h2 {
-  font-size: 25px;
   color: #4b3019;
   font-size: 2vh;
 }
@@ -337,30 +341,30 @@ div .container {
 .logo2 {
   display: flex;
   position: absolute;
-  width: 20%;
+  width: 19vw;
   left: 0vh;
-  margin-left: 0vh;
-  top: 14vh;
+  margin-left: 0;
+  top: 10vw;
 }
 
 input {
-  height: 5vh;
+  height: 3vw;
   width: 100%;
   box-sizing: border-box;
   padding: 8px 20px;
   margin: 5px 0;
   border: 1px solid #4b3019;
-  font-size: 1.7vh;
+  font-size: 0.9vw;
 }
 
 select {
-  height: 5vh;
-  width: 50%;
+  height: 3vw;
+  width: 20vw;
   box-sizing: border-box;
   padding: 8px 20px;
   margin: 5px 0;
   border: 1px solid #4b3019;
-  font-size: 1.7vh;
+  font-size: 0.9vw;
 }
 
 button {
@@ -379,5 +383,27 @@ button:hover {
   color: #e5e7e9;
   background: rgb(46, 199, 115);
   border: 1.2px solid #4b3019;
+}
+button:focus {
+  color: #e5e7e9;
+  background: rgb(46, 199, 115);
+  border: 1.2px solid #4b3019;
+}
+
+@media (max-width: 1189px) {
+  .logo2 {
+    display: none;
+  }
+
+  #Historial .container-table {
+    width: 85vw;
+  }
+}
+@media (max-width: 1300px) {
+  #Historial .container {
+    padding: 0vw;
+    border-radius: 20px;
+    margin: 12vw 0 1vw 0;
+  }
 }
 </style>

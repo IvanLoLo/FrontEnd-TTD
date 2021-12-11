@@ -1,48 +1,84 @@
 <template>
-    <div class="servicesContainer">
-        <h1>Tus pedidos, <span>{{ username }}</span></h1>
-        <h2 style="margin-bottom: 5px;">Ordenar por:</h2>
-        <select name="Filtro" v-model="filter">
-            <option value="">Todos</option>
-            <option value="Emisor">Emisor</option>
-            <option value="Receptor">Receptor</option>
-        </select>
+  <div class="servicesContainer">
+    <h1>
+      Tus pedidos, <span>{{ username }}</span>
+    </h1>
+    <h2 style="margin-bottom: 5px;">Ordenar por:</h2>
+    <select name="Filtro" v-model="filter">
+      <option value="">Todos</option>
+      <option value="Emisor">Emisor</option>
+      <option value="Receptor">Receptor</option>
+    </select>
 
-        <div class="tablaPedidos">
-            <table>
-                <tr>
-                    <th>Fecha Actualizacion</th>
-                    <th>Emisor</th>
-                    <th>Receptor</th>
-                    <th>Origen</th>
-                    <th>Destino</th>
-                </tr>
+    <div class="tablaPedidos">
+      <table>
+        <tr>
+          <th>Fecha Actualizacion</th>
+          <th>Emisor</th>
+          <th>Receptor</th>
+          <th>Origen</th>
+          <th>Destino</th>
+        </tr>
 
-                <tr v-for="pedido in deliveriesByUsername" :key="pedido.id" v-on:click="detallesServicio(pedido.id, $event)">
-                    <td v-if="pedido.pickUpDate && !pedido.deliverDate">{{ pedido.pickUpDate.substring(0,10).split("-").reverse().join("/") }}</td>
-                    <td v-if="pedido.deliverDate">{{ pedido.deliverDate.substring(0,10).split("-").reverse().join("/") }}</td>
-                    <td v-if="!pedido.deliverDate">-</td>
-                    <td>{{ pedido.usernameEmisor }}</td>
-                    <td>{{ pedido.usernameReceptor }}</td>
-                    <td>{{ pedido.ciudadOrigen }}</td>
-                    <td>{{ pedido.ciudadDestino }}</td>
-                    <td id="deleteService">
-                        <img src="http://assets.stickpng.com/images/5a5798809538462e5a82d431.png" title="Eliminar Servicio"
-                        alt="Eliminar Servicio" style="cursor: pointer;" v-if="pedido.estado=='Por recoger'" v-on:click="borrarServicio(pedido.id)">
-                        <img src="http://assets.stickpng.com/images/5a5798809538462e5a82d431.png" title="No es posible eliminar este servicio"
-                        alt="Eliminar Servicio" style="filter: grayscale(1); cursor: not-allowed;" v-if="pedido.estado!='Por recoger'">
-                    </td>
-                </tr>
-
-            </table>
-        </div>
-
-        <div class="newService">
-            <h2>Crear nuevo Servicio</h2>
-            <img src="https://cdn-icons-png.flaticon.com/512/117/117885.png" style="width: 60px;" v-on:click="crearServicio()" alt="Imagen Nuevo">
-        </div>
-
+        <tr
+          v-for="pedido in deliveriesByUsername"
+          :key="pedido.id"
+          v-on:click="detallesServicio(pedido.id, $event)"
+        >
+          <td v-if="pedido.pickUpDate && !pedido.deliverDate">
+            {{
+              pedido.pickUpDate
+                .substring(0, 10)
+                .split("-")
+                .reverse()
+                .join("/")
+            }}
+          </td>
+          <td v-if="pedido.deliverDate">
+            {{
+              pedido.deliverDate
+                .substring(0, 10)
+                .split("-")
+                .reverse()
+                .join("/")
+            }}
+          </td>
+          <td v-if="!pedido.deliverDate">-</td>
+          <td>{{ pedido.usernameEmisor }}</td>
+          <td>{{ pedido.usernameReceptor }}</td>
+          <td>{{ pedido.ciudadOrigen }}</td>
+          <td>{{ pedido.ciudadDestino }}</td>
+          <td id="deleteService">
+            <img
+              src="http://assets.stickpng.com/images/5a5798809538462e5a82d431.png"
+              title="Eliminar Servicio"
+              alt="Eliminar Servicio"
+              style="cursor: pointer;"
+              v-if="pedido.estado == 'Por recoger'"
+              v-on:click="borrarServicio(pedido.id)"
+            />
+            <img
+              src="http://assets.stickpng.com/images/5a5798809538462e5a82d431.png"
+              title="No es posible eliminar este servicio"
+              alt="Eliminar Servicio"
+              style="filter: grayscale(1); cursor: not-allowed;"
+              v-if="pedido.estado != 'Por recoger'"
+            />
+          </td>
+        </tr>
+      </table>
     </div>
+
+    <div class="newService">
+      <h2>Crear nuevo Servicio</h2>
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/117/117885.png"
+        style="width: 4vw;"
+        v-on:click="crearServicio()"
+        alt="Imagen Nuevo"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -51,10 +87,15 @@ import gql from "graphql-tag";
 export default {
   name: "Services",
 
-  data: function () {
+  data: function() {
     return {
       username: localStorage.getItem("username") || "",
-      date: (new Date()).toISOString().substring(0,10).split("-").reverse().join("/"),
+      date: new Date()
+        .toISOString()
+        .substring(0, 10)
+        .split("-")
+        .reverse()
+        .join("/"),
       filter: "",
       deliveriesByUsername: {
         id: "",
@@ -71,8 +112,8 @@ export default {
 
   apollo: {
     deliveriesByUsername: {
-      query: gql `
-        query ($username: String!, $filter: String) {
+      query: gql`
+        query($username: String!, $filter: String) {
           deliveriesByUsername(username: $username, filter: $filter) {
             id
             usernameEmisor
@@ -88,7 +129,7 @@ export default {
       variables() {
         return {
           username: this.username,
-          filter: this.filter
+          filter: this.filter,
         };
       },
     },
@@ -96,7 +137,7 @@ export default {
 
   methods: {
     borrarServicio: function(id) {
-      console.log("Hellowda "+id);
+      console.log("Hellowda " + id);
     },
 
     crearServicio: function() {
@@ -104,41 +145,40 @@ export default {
       this.$emit("loadFormNew");
     },
 
-    detallesServicio: function(id, event){
+    detallesServicio: function(id, event) {
       //Que no sea el boton de borrar
-      if(event.path[0].textContent == "") return;
-      console.log("Ver detalles de "+id);
+      if (event.path[0].textContent == "") return;
+      console.log("Ver detalles de " + id);
       //Enviar a la pagina de detalles
       this.$emit("loadDetalles", id);
     },
-  }
+  },
 };
 </script>
 
 <style>
-
 .servicesContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .servicesContainer select {
-    width: 13%;
+  width: 13%;
 }
 
 .tablaPedidos {
-    margin-top: 30px;
-    margin-bottom: 10px;
-    max-height: 230px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    border: 3px solid rgb(128, 129, 81);
+  margin-top: 30px;
+  margin-bottom: 10px;
+  max-height: 230px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border: 3px solid rgb(128, 129, 81);
 }
 
 .tablaPedidos table {
-    text-align: center;
+  text-align: center;
 }
 
 .tablaPedidos table td,
@@ -160,7 +200,7 @@ export default {
 }
 
 .tablaPedidos table tr:nth-child(even) {
-    background-color: #9c9d6323;
+  background-color: #9c9d6323;
 }
 
 .tablaPedidos table tr:hover {
@@ -168,23 +208,22 @@ export default {
 }
 
 #deleteService {
-    padding: 0;
-    padding-right: 3px;
-    padding-left: 3px;
+  padding: 0;
+  padding-right: 3px;
+  padding-left: 3px;
 }
 
 #deleteService img {
-    width: 28px;
-    margin: 0;
+  width: 28px;
+  margin: 0;
 }
 
 .newService {
-    text-align: center;
+  text-align: center;
 }
 
 .newService img {
-    margin: -12px;
-    cursor: pointer;
+  margin: -12px;
+  cursor: pointer;
 }
-
 </style>

@@ -112,6 +112,10 @@ export default {
 </script>
 
 <style>
+div .main-component{
+  height: 75vh;
+}
+
 body {
   margin: 0 0 0 0;
 }
@@ -120,7 +124,7 @@ body {
   margin: 0%;
   padding: 0;
   width: 100vw;
-  height: 10vh;
+  height: 6vh;
   min-height: 100px;
 
   background-color: #9c9d63;
@@ -138,15 +142,13 @@ body {
 }
 
 .header nav {
-  height: 100vw;
+  height: 6vw;
   width: 30vw;
   margin-right: 2vw;
 
   display: flex;
   justify-content: space-around;
   align-items: center;
-
-  font-size: 30px;
 }
 
 .header nav button {
@@ -176,12 +178,10 @@ body {
 }
 
 .footer {
-  margin: 0;
+  margin-top: 2.4vw;
   padding: 0;
   width: 100vw;
-  height: 2vw;
-  min-height: 100px;
-
+  height: 5vw;
   background-color: #9c9d63;
   color: #e5e7e9;
   
@@ -198,7 +198,7 @@ body {
 }
 
 img {
-  width: 100px;
-  margin-left: 10vw;
+  width: 90px;
+  margin-left: 11vw;
 }
 </style>

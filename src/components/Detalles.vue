@@ -50,17 +50,24 @@
       <h2>
         Fecha de recogida:
         <span v-if="deliveryById.pickUpDate">{{
-          deliveryById.pickUpDate.substring(0, 10).split("-").reverse().join("/")
+          deliveryById.pickUpDate
+            .substring(0, 10)
+            .split("-")
+            .reverse()
+            .join("/")
         }}</span>
         <span v-if="!deliveryById.pickUpDate">El pedido aun no se recoge</span>
       </h2>
 
       <h2>
         Fecha de entrega:
-        <span v-if="deliveryById.deliverDate">{{ 
-          deliveryById.deliverDate.substring(0, 10).split("-").reverse().join("/") 
-        }}</span
-        >
+        <span v-if="deliveryById.deliverDate">{{
+          deliveryById.deliverDate
+            .substring(0, 10)
+            .split("-")
+            .reverse()
+            .join("/")
+        }}</span>
         <span v-if="!deliveryById.pickUpDate">El pedido aun no se entrega</span>
       </h2>
 
@@ -76,18 +83,37 @@
   <div class="image">
     <img src="../assets/recogida.png" alt="Recogida" class="i1" v-show="most" />
     <p>---------</p>
-    <img src="../assets/despacho.png" alt="Despachado" class="i2" v-show="most2" />
+    <img
+      src="../assets/despacho.png"
+      alt="Despachado"
+      class="i2"
+      v-show="most2"
+    />
     <p>---------</p>
     <img src="../assets/bodega.png" alt="En Bodega" class="i3" v-show="most3" />
     <p>---------</p>
-    <img src="../assets/reparto.png" alt="En Reparto" class="i4" v-show="most4" />
+    <img
+      src="../assets/reparto.png"
+      alt="En Reparto"
+      class="i4"
+      v-show="most4"
+    />
     <p>---------</p>
-    <img src="../assets/entregado.png" alt="Entregado" class="i5" v-show="most5" />
+    <img
+      src="../assets/entregado.png"
+      alt="Entregado"
+      class="i5"
+      v-show="most5"
+    />
   </div>
-    <div class="cajaB">
-      <button class="btnE" v-show="mostButton">Editar pedido</button>
-      <button class="btnC" v-show="mostButton">Cancelar pedido</button>
-    </div>
+  <div class="cajaB">
+    <button class="btnE" v-show="mostButton" v-on:click="editService(id)">
+      Editar pedido
+    </button>
+    <button class="btnC" v-show="mostButton" v-on:click="deleteService(id)">
+      Cancelar pedido
+    </button>
+  </div>
 </template>
 
 <script>
@@ -143,6 +169,33 @@ export default {
     },
   },
   methods: {
+    editService: function(id) {
+      console.log("editar servicio");
+      //Que no sea el boton de borrar
+      /*       if (event.path[0].textContent == "") return;
+      console.log("Editar información de " + id); */
+      //Enviar a la pagina de detalles
+      //this.$router.push({ name: "services" });
+      this.$router.push({ name: "formServicesEdit", params: { id } });
+    },
+
+    deleteService: function(id) {
+      console.log("Eliminando servicio");
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation DeleteDelivery($deliveryId: String!) {
+            deleteDelivery(deliveryId: $deliveryId)
+          }
+        `,
+        variables: {
+          deliveryId: window.location.href.split("detalles/")[1],
+        },
+      });
+      this.$router.push({ name: "services" });
+      alert("Pedido Eliminado");
+      setTimeout(function() {}, 2000);
+    },
+
     mostrar() {
       console.log(this.deliveryById.estado);
       let estado2 = this.deliveryById.estado;
@@ -303,18 +356,20 @@ export default {
 
 /* Botones */
 
-.cajaB{
+.cajaB {
   display: flex;
   margin-right: 5vw;
   justify-content: right;
 }
-.btnE{
+.btnE {
   width: 110px;
+  height: 40px;
   padding: 0;
   margin-top: 0;
 }
-.btnC{
+.btnC {
   width: 120px;
+  height: 40px;
   padding: 0;
   margin-top: 0;
   background-color: brown;
