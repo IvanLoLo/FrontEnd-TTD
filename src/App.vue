@@ -26,7 +26,11 @@
     </div>
 
     <footer class="footer">
-      <h2>TTDOOR - Misión TIC 2022</h2>
+      <h2>TTDOOR - Misión TIC 2022. Copyright <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="44" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#fdfefe" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg></h2>
     </footer>
   </div>
 </template>
@@ -115,7 +119,7 @@ body {
 .header {
   margin: 0%;
   padding: 0;
-  width: 100%;
+  width: 100vw;
   height: 10vh;
   min-height: 100px;
 
@@ -125,6 +129,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family:Arial, Helvetica, sans-serif;
 }
 
 .header h1 {
@@ -133,14 +138,15 @@ body {
 }
 
 .header nav {
-  height: 100%;
-  width: 30%;
+  height: 100vw;
+  width: 30vw;
+  margin-right: 2vw;
 
   display: flex;
   justify-content: space-around;
   align-items: center;
 
-  font-size: 20px;
+  font-size: 30px;
 }
 
 .header nav button {
@@ -149,8 +155,10 @@ body {
   border: 1px solid #e5e7e9;
 
   border-radius: 5px;
-  padding: 10px 20px;
-  margin-right: 10px;
+  padding: 0;
+  margin-right: 1vw;
+
+  font-size: 0.8vw;
 }
 
 .header nav button:hover {
@@ -170,21 +178,23 @@ body {
 .footer {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 12vh;
+  width: 100vw;
+  height: 2vw;
   min-height: 100px;
 
   background-color: #9c9d63;
   color: #e5e7e9;
+  
 }
 
 .footer h2 {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 4vw;
 
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 img {
