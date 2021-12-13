@@ -142,7 +142,7 @@ export default {
     },
 
     borrarServicio: function(id) {
-      let confirmar = confirm("¿Está seguro que desea calcelar este servicio?");
+      let confirmar = confirm("¿Está seguro que desea cancelar este servicio?");
       if(!confirmar) return;
       console.log("Eliminando servicio "+id);
       this.$apollo.mutate({

@@ -106,6 +106,10 @@ export default {
       this.$router.push({ name: "detalles", params: { deliver: id} });
     },
 
+    loadServiceId: function(id) {
+      this.$router.push({ name: "ServiceId", params: { deliver: id} });
+    },
+
     loadAccount: function() {
       this.$router.push({ name: "account" });
     },

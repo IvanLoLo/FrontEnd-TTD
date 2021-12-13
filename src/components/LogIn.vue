@@ -1,22 +1,33 @@
 <template>
+  <h1 class="titulo">Inicia sesion o ingresa el ID del pedido que deseas consultar</h1>
+  <div class="logIn_user">
+    <div class="container_logIn_user">
+      <h2>Iniciar sesión</h2>
 
-    <div class="logIn_user">
-        <div class="container_logIn_user">
-            <h2>Iniciar sesión</h2>
-
-            <form v-on:submit.prevent="processLogInUser" >
-                <input type="text" v-model="user.username" placeholder="Usuario">
-                <br>
-                <input type="password" v-model="user.password" placeholder="Contraseña">
-                <br>
-                <button type="submit">Iniciar Sesión</button>
-            </form>
-        </div>
-
+      <form v-on:submit.prevent="processLogInUser">
+        <input type="text" v-model="user.username" placeholder="Usuario" />
+        <br />
+        <input
+          type="password"
+          v-model="user.password"
+          placeholder="Contraseña"
+        />
+        <br />
+        <button type="submit">Iniciar Sesión</button>
+      </form>
     </div>
 
-</template>
+    <div class="consulta_id">
+      <h2>Ingresa el ID de tu pedido</h2>
 
+      <form v-on:submit.prevent="processLogInUser">
+        <input type="text" v-model="idCon" placeholder="#ID" />
+        <br />
+        <button type="submit"  v-on:click="consultaId(idCon)">Consultar</button>
+      </form>
+    </div>
+  </div>
+</template>
 
 <script>
 import gql from "graphql-tag";
@@ -30,11 +41,14 @@ export default {
         username: "",
         password: "",
       },
+      idCon: "",
     };
   },
 
   methods: {
-    processLogInUser: async function() {
+    
+    /*processLogInUser: async function() {
+      //if (username != "" && password != ""){}
       await this.$apollo
         .mutate({
           mutation: gql`
@@ -59,78 +73,101 @@ export default {
           this.$emit("completedLogIn", dataLogIn);
         })
         .catch((error) => {
-          console.log("Error en el LogIn "+error);
+          console.log("Error en el LogIn " + error);
           alert("ERROR 401: Credenciales Incorrectas.");
         });
+    },*/
+
+    consultaId() {
+      localStorage.setItem("consultaId", this.idCon);
+      this.$emit("loadServiceId", this.idCon);
+      console.log(this.idCon);
     },
   },
-}
+};
 </script>
-
 
 <style>
 
-    .logIn_user{
-        margin: 0;
-        padding: 0%;
-        height: 100%;
-        width: 100%;
-    
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.titulo{
+  justify-content: center;
+  justify-items: center;
+  margin: 2vw;
+  margin-left: 25vw;
+  width: 80vw;
+  color: #4b3019;
+}
+.logIn_user {
+  margin: 0;
+  padding: 0%;
+  height: 80%;
+  width: 100%;
 
-    .container_logIn_user {
-        border: 3px solid  #4b3019;
-        border-radius: 10px;
-        width: 25%;
-        height: 60%;
-        
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+}
 
-    .logIn_user h2{
-        color: #4b3019;
+.container_logIn_user {
+  border: 3px solid #4b3019;
+  border-radius: 10px;
+  width: 25%;
+  height: 60%;
 
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    .logIn_user form{
-        width: 70%;
-        
-    }
+.logIn_user h2 {
+  color: #4b3019;
+}
 
-    .logIn_user input{
-        height: 40px;
-        width: 100%;
+.logIn_user form {
+  width: 70%;
+}
 
-        box-sizing: border-box;
-        padding: 10px 20px;
-        margin: 5px 0;
+.logIn_user input {
+  height: 40px;
+  width: 100%;
 
-        border: 1px solid #283747;
-    }
+  box-sizing: border-box;
+  padding: 10px 20px;
+  margin: 5px 0;
 
-    .logIn_user button{
-        width: 100%;
-        height: 40px;
+  border: 1px solid #283747;
+}
 
-        color: #E5E7E9;
-        background: #4b3019;
-        border: 1px solid #E5E7E9;
+.logIn_user button {
+  width: 100%;
+  height: 40px;
 
-        border-radius: 5px;
-        padding: 10px 25px;
-        margin: 5px 0;
-    }
+  color: #e5e7e9;
+  background: #4b3019;
+  border: 1px solid #e5e7e9;
 
-    .logIn_user button:hover{
-        color: #E5E7E9;
-        background: #135700;
-        border: 1px solid #283747;
-    }
+  border-radius: 5px;
+  padding: 10px 25px;
+  margin: 5px 0;
+}
 
+.logIn_user button:hover {
+  color: #e5e7e9;
+  background: #135700;
+  border: 1px solid #283747;
+}
+
+/* /////////////////// */
+.consulta_id {
+  border: 3px solid #4b3019;
+  border-radius: 10px;
+  width: 25%;
+  height: 60%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>
