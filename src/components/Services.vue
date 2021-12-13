@@ -10,7 +10,7 @@
       <option value="Receptor">Receptor</option>
     </select>
 
-    <div class="tablaPedidos">
+    <div class="tablaPedidos" style="max-height: 250px;">
       <table>
         <tr>
           <th>Fecha Actualizacion</th>
@@ -190,7 +190,7 @@ export default {
 .tablaPedidos {
   margin-top: 30px;
   margin-bottom: 10px;
-  max-height: 230px;
+  max-height: 250px;
   overflow-x: hidden;
   overflow-y: scroll;
   border: 3px solid rgb(128, 129, 81);

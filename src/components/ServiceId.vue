@@ -1,6 +1,10 @@
 <template>
   <div class="informacionH">
     <h1>Detalles del pedido: {{ deliveryById.id }}</h1>
+    <form v-on:submit.prevent="processLogInUser">
+        <input type="text" v-model="idCon" placeholder="#ID" style="margin: 10px 20px 0px 20px;"/>
+        <button type="submit"  v-on:click="consultaId(idCon)" style="margin-top: 10px; height: 46px;">Consultar</button>
+    </form>
   </div>
   <div class="informacion">
     <div class="detalles">
@@ -56,7 +60,7 @@
             .reverse()
             .join("/")
         }}</span>
-        <span v-if="!deliveryById.pickUpDate">El pedido aún no se recoge</span>
+        <span v-if="!deliveryById.pickUpDate && most">El pedido aún no se recoge</span>
       </h2>
 
       <h2>
@@ -68,7 +72,7 @@
             .reverse()
             .join("/")
         }}</span>
-        <span v-if="!deliveryById.pickUpDate">El pedido aún no se entrega</span>
+        <span v-if="!deliveryById.pickUpDate && most">El pedido aún no se entrega</span>
       </h2>
 
       <h2>
@@ -107,10 +111,10 @@
     />
   </div>
   <div class="cajaB">
-    <button class="btnE" v-if="permisos()" v-show="mostButton" v-on:click="editService(id)">
+    <button class="btnE" v-if="permisos()" v-show="mostButton" v-on:click="editService()">
       Editar pedido
     </button>
-    <button class="btnC" v-if="permisos()" v-show="mostButton" v-on:click="deleteService(id)">
+    <button class="btnC" v-if="permisos()" v-show="mostButton" v-on:click="deleteService()">
       Cancelar pedido
     </button>
   </div>
@@ -125,63 +129,103 @@ export default {
 
   data: function() {
     return {
-      deliveryById: [],
+      userId: -1,
+      deliveryById: {
+        id: null,
+        usernameEmisor: "",
+        usernameReceptor: "",
+        ciudadOrigen: "",
+        ciudadDestino: "",
+        direccionOrigen: "",
+        direccionDestino: "",
+        value: null,
+        estado: null,
+        description: null,
+        pickUpDate: null,
+        deliverDate: null,
+        pqr: null,
+      },
       most: false,
       most2: false,
       most3: false,
       most4: false,
       most5: false,
       mostButton: false,
+      idCon: "",
     };
   },
-  apollo: {
-    deliveryById: {
-      query: gql`
-        query deliveryById($deliveryId: String!) {
-          deliveryById(deliveryId: $deliveryId) {
-            id
-            usernameEmisor
-            usernameReceptor
-            ciudadOrigen
-            direccionOrigen
-            ciudadDestino
-            direccionDestino
-            value
-            description
-            estado
-            pickUpDate
-            deliverDate
-            pqr
-          }
-        }
-      `,
-      variables() {
-        console.log(this.deliveryById.estado);
-        if (this.deliveryById.estado != undefined) {
-          //localStorage.setItem("estados", this.deliveryById.estado);
-          this.mostrar();
-        }
-        return {
-          //deliveryId: window.location.href.split("detalles/")[1],
-          deliveryId: localStorage.getItem("consultaId"),
-        };
-      },
-    },
-  },
+
   methods: {
+    consultaId: async function(id){
+        this.most = false;
+        this.most2 = false,
+        this.most3 = false,
+        this.most4 = false,
+        this.most5 = false,
+        this.mostButton = false,
+
+        await this.$apollo
+        .query({
+            query: gql`
+                query($deliveryId: String!) {
+                    deliveryById(deliveryId: $deliveryId) {
+                        id
+                        usernameEmisor
+                        usernameReceptor
+                        ciudadOrigen
+                        ciudadDestino
+                        direccionOrigen
+                        direccionDestino
+                        description
+                        estado
+                        value
+                        pickUpDate
+                        deliverDate
+                        pqr
+                    }
+                }
+            `,
+            variables: {
+                deliveryId: id,
+            },
+        })
+        .then((result) => {
+            this.deliveryById = {
+                id: result.data.deliveryById.id,
+                usernameEmisor: result.data.deliveryById.usernameEmisor,
+                usernameReceptor: result.data.deliveryById.usernameReceptor,
+                ciudadOrigen: result.data.deliveryById.ciudadOrigen,
+                ciudadDestino: result.data.deliveryById.ciudadDestino,
+                direccionOrigen: result.data.deliveryById.direccionOrigen,
+                direccionDestino: result.data.deliveryById.direccionDestino,
+                value: result.data.deliveryById.value,
+                estado: result.data.deliveryById.estado,
+                description: result.data.deliveryById.description,
+                pickUpDate: result.data.deliveryById.pickUpDate,
+                deliverDate: result.data.deliveryById.deliverDate,
+                pqr: result.data.deliveryById.pqr,
+            }
+            if(this.deliveryById.pickUpDate) this.deliveryById.pickUpDate = this.deliveryById.pickUpDate.substring(0,10);
+            if(this.deliveryById.deliverDate) this.deliveryById.deliverDate = this.deliveryById.deliverDate.substring(0,10);
+            this.mostrar();
+        })
+        .catch((error) => {
+            console.log(error);
+            if(this.idCon == "" || this.idCon == null) alert("Por favor ingrese un codigo de identificación de pedido");
+            else alert("No se encontro un pedido con el codifo de indentificación: "+this.idCon);
+            this.idCon = "";
+        });
+    },
 
     permisos: function(){
-      return this.deliveryById.usernameEmisor == localStorage.getItem("username") || this.userId == 1;
+        console.log("Permisos");
+        if(localStorage.getItem("username")) this.userId = jwt_decode(localStorage.getItem("token_refresh")).user_id;
+        return this.deliveryById.usernameEmisor == localStorage.getItem("username") || this.userId == 1;
     },
 
     editService: function(id) {
-      console.log("editar servicio");
-      //Que no sea el boton de borrar
-      /*       if (event.path[0].textContent == "") return;
-      console.log("Editar información de " + id); */
-      //Enviar a la pagina de detalles
-      //this.$router.push({ name: "services" });
-      this.$router.push({ name: "formServicesEdit", params: { id } });
+      console.log("Editar servicio");
+      this.$router.push({ name: "formServicesEdit", params: { deliver: this.idCon } });
     },
 
     deleteService: function(id) {
@@ -250,14 +294,20 @@ export default {
   height: 10%;
 
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .informacionH h1 {
   font-size: 2.5vw;
   color: #283747;
+}
+
+.informacionH form {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
 }
 
 .informacion {

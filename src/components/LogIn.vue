@@ -1,5 +1,4 @@
 <template>
-  <h1 class="titulo">Inicia sesion o ingresa el ID del pedido que deseas consultar</h1>
   <div class="logIn_user">
     <div class="container_logIn_user">
       <h2>Iniciar sesión</h2>
@@ -14,16 +13,6 @@
         />
         <br />
         <button type="submit">Iniciar Sesión</button>
-      </form>
-    </div>
-
-    <div class="consulta_id">
-      <h2>Ingresa el ID de tu pedido</h2>
-
-      <form v-on:submit.prevent="processLogInUser">
-        <input type="text" v-model="idCon" placeholder="#ID" />
-        <br />
-        <button type="submit"  v-on:click="consultaId(idCon)">Consultar</button>
       </form>
     </div>
   </div>
@@ -47,7 +36,7 @@ export default {
 
   methods: {
     
-    /*processLogInUser: async function() {
+    processLogInUser: async function() {
       //if (username != "" && password != ""){}
       await this.$apollo
         .mutate({
@@ -76,12 +65,6 @@ export default {
           console.log("Error en el LogIn " + error);
           alert("ERROR 401: Credenciales Incorrectas.");
         });
-    },*/
-
-    consultaId() {
-      localStorage.setItem("consultaId", this.idCon);
-      this.$emit("loadServiceId", this.idCon);
-      console.log(this.idCon);
     },
   },
 };
@@ -89,14 +72,6 @@ export default {
 
 <style>
 
-.titulo{
-  justify-content: center;
-  justify-items: center;
-  margin: 2vw;
-  margin-left: 25vw;
-  width: 80vw;
-  color: #4b3019;
-}
 .logIn_user {
   margin: 0;
   padding: 0%;

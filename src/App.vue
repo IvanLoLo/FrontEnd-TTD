@@ -4,6 +4,7 @@
       <h1>Transport To Door</h1>
       <img src="./assets/logo.png" alt="Logo-TTDOOR" />
       <nav>
+        <button v-on:click="loadServiceId">Seguir Pedido</button>
         <button v-if="is_auth" v-on:click="loadHome">Cuenta</button>
         <button v-if="is_auth" v-on:click="loadServices">Pedidos</button>
         <button v-if="is_auth && admin()" v-on:click="loadAllServices">Admin</button>
@@ -22,6 +23,7 @@
         v-on:loadFormNew="loadFormNew"
         v-on:loadFormEdit="loadFormEdit"
         v-on:loadDetalles="loadDetalles"
+        v-on:loadServiceId="loadServiceId"
       >
       </router-view>
     </div>
@@ -106,8 +108,10 @@ export default {
       this.$router.push({ name: "detalles", params: { deliver: id} });
     },
 
-    loadServiceId: function(id) {
-      this.$router.push({ name: "ServiceId", params: { deliver: id} });
+    loadServiceId: function() {
+      console.log("Click")
+      if(this.is_auth) this.$router.push({ name: "serviceIdLogued" });
+      else this.$router.push({ name: "serviceId" });
     },
 
     loadAccount: function() {

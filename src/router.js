@@ -12,6 +12,7 @@ import FormService from './components/FormService.vue'
 import Pqr from './components/PQR.vue'
 import Detalles from './components/Detalles.vue'
 import AllServices from './components/AllServices.vue'
+import ServiceId from './components/ServiceId.vue'
 
 const routes = [{
         path: '/user/logIn',
@@ -79,6 +80,18 @@ const routes = [{
         component: AllServices,
         meta: { requiresAuth: true },
     },
+    {
+        path: "/query/service",
+        name: "serviceId",
+        component: ServiceId,
+        meta: { requiresAuth: false },
+    },
+    {
+        path: "/query/service",
+        name: "serviceIdLogued",
+        component: ServiceId,
+        meta: { requiresAuth: true },
+    }
 ];
 
 const router = createRouter({
