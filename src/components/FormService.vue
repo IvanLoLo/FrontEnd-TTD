@@ -34,7 +34,7 @@
                 <input type="date" v-model="infoDelivery.deliverDate" v-if="userId==1">
                 <br>
 
-                <button type="submit">Enviar</button>
+                <button id="btnEnviar" type="submit">Enviar</button>
             </form>
         </div>
 
@@ -109,8 +109,9 @@ export default {
 
             if(this.accion=="Nuevo") await this.newService();
             else await this.updateService();
-        
-            window.location.href = window.location.href.split("services/")[0]+"user/services";
+            console.log(this.userId);
+            if(this.userId == 1) window.location.href = window.location.href.split("services/")[0]+"administration/services";
+            else window.location.href = window.location.href.split("services/")[0]+"user/services";
 
         },
 
@@ -263,7 +264,8 @@ export default {
 }
 
 .container_formService h2 {
-    margin-bottom: 0;
+    margin-top: 30px;
+    margin-bottom: 15px;
 }
 
 #formulario textarea{

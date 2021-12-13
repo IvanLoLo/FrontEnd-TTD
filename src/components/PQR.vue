@@ -384,7 +384,7 @@ button:hover {
   background: rgb(46, 199, 115);
   border: 1.2px solid #4b3019;
 }
-button:focus {
+table button:focus {
   color: #e5e7e9;
   background: rgb(46, 199, 115);
   border: 1.2px solid #4b3019;

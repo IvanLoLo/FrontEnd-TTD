@@ -56,7 +56,7 @@
             .reverse()
             .join("/")
         }}</span>
-        <span v-if="!deliveryById.pickUpDate">El pedido aun no se recoge</span>
+        <span v-if="!deliveryById.pickUpDate">El pedido aún no se recoge</span>
       </h2>
 
       <h2>
@@ -68,7 +68,7 @@
             .reverse()
             .join("/")
         }}</span>
-        <span v-if="!deliveryById.pickUpDate">El pedido aun no se entrega</span>
+        <span v-if="!deliveryById.pickUpDate">El pedido aún no se entrega</span>
       </h2>
 
       <h2>
@@ -107,10 +107,10 @@
     />
   </div>
   <div class="cajaB">
-    <button class="btnE" v-show="mostButton" v-on:click="editService(id)">
+    <button class="btnE" v-if="permisos()" v-show="mostButton" v-on:click="editService(id)">
       Editar pedido
     </button>
-    <button class="btnC" v-show="mostButton" v-on:click="deleteService(id)">
+    <button class="btnC" v-if="permisos()" v-show="mostButton" v-on:click="deleteService(id)">
       Cancelar pedido
     </button>
   </div>
@@ -132,7 +132,7 @@ export default {
       most3: false,
       most4: false,
       most5: false,
-      mostButton: false,
+      mostButton: true,
     };
   },
   apollo: {
@@ -169,6 +169,11 @@ export default {
     },
   },
   methods: {
+
+    permisos: function(){
+      return this.deliveryById.usernameEmisor == localStorage.getItem("username") || this.userId == 1;
+    },
+
     editService: function(id) {
       console.log("editar servicio");
       //Que no sea el boton de borrar
@@ -180,10 +185,12 @@ export default {
     },
 
     deleteService: function(id) {
+      let confirmar = confirm("¿Está seguro que desea eliminar este servicio?");
+      if(!confirmar) return;
       console.log("Eliminando servicio");
       this.$apollo.mutate({
         mutation: gql`
-          mutation DeleteDelivery($deliveryId: String!) {
+          mutation($deliveryId: String!) {
             deleteDelivery(deliveryId: $deliveryId)
           }
         `,
@@ -191,15 +198,15 @@ export default {
           deliveryId: window.location.href.split("detalles/")[1],
         },
       });
-      this.$router.push({ name: "services" });
       alert("Pedido Eliminado");
-      setTimeout(function() {}, 2000);
+      if(this.userId == 1) window.location.href = window.location.href.split("user/")[0]+"administration/services";
+      else window.location.href = window.location.href.split("user/")[0]+"user/services";
     },
 
     mostrar() {
       console.log(this.deliveryById.estado);
       let estado2 = this.deliveryById.estado;
-      if (estado2 == "Por recoger") {
+      if (estado2 == "Por Recoger") {
         this.most = true;
         console.log("Estado 1");
         this.mostButton = true;

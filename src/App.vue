@@ -6,6 +6,7 @@
       <nav>
         <button v-if="is_auth" v-on:click="loadHome">Cuenta</button>
         <button v-if="is_auth" v-on:click="loadServices">Pedidos</button>
+        <button v-if="is_auth && admin()" v-on:click="loadAllServices">Admin</button>
         <button v-if="is_auth" v-on:click="loadPQR">PQRS</button>
         <button v-if="is_auth" v-on:click="logOut">Cerrar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadLogIn">Iniciar Sesión</button>
@@ -36,6 +37,8 @@
 </template>
 
 <script>
+import jwt_decode from "jwt-decode";
+
 export default {
   name: "App",
 
@@ -49,6 +52,11 @@ export default {
   },
 
   methods: {
+
+    admin: function(){
+      return jwt_decode(localStorage.getItem("token_refresh")).user_id == 1;
+    },
+
     loadLogIn: function() {
       this.$router.push({ name: "logIn" });
     },
@@ -76,6 +84,10 @@ export default {
 
     loadServices: function() {
       this.$router.push({ name: "services" });
+    },
+
+    loadAllServices: function() {
+      this.$router.push({ name: "allServices" });
     },
 
     loadFormNew: function() {

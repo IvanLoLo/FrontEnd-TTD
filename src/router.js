@@ -11,6 +11,7 @@ import Services from './components/Services.vue'
 import FormService from './components/FormService.vue'
 import Pqr from './components/PQR.vue'
 import Detalles from './components/Detalles.vue'
+import AllServices from './components/AllServices.vue'
 
 const routes = [{
         path: '/user/logIn',
@@ -70,6 +71,12 @@ const routes = [{
         path: "/user/detalles/:deliver",
         name: "detalles",
         component: Detalles,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: "/administration/services",
+        name: "allServices",
+        component: AllServices,
         meta: { requiresAuth: true },
     },
 ];
