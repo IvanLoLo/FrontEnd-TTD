@@ -132,7 +132,7 @@ export default {
       most3: false,
       most4: false,
       most5: false,
-      mostButton: true,
+      mostButton: false,
     };
   },
   apollo: {
@@ -206,7 +206,7 @@ export default {
     mostrar() {
       console.log(this.deliveryById.estado);
       let estado2 = this.deliveryById.estado;
-      if (estado2 == "Por Recoger") {
+      if (estado2 == "Por Recoger" || this.userId == 1) {
         this.most = true;
         console.log("Estado 1");
         this.mostButton = true;

@@ -110,6 +110,10 @@ export default {
             if(this.accion=="Nuevo") await this.newService();
             else await this.updateService();
             console.log(this.userId);
+
+            let footer = document.getElementsByClassName("footer")[0];
+            footer.style.marginTop = "0";
+
             if(this.userId == 1) window.location.href = window.location.href.split("services/")[0]+"administration/services";
             else window.location.href = window.location.href.split("services/")[0]+"user/services";
 
@@ -238,6 +242,10 @@ export default {
     },
 
     created: function(){
+
+        let footer = document.getElementsByClassName("footer")[0];
+        footer.style.marginTop = "170px";
+
         console.log(this.accion);
         console.log(window.location.href.split("/"));
         if(this.accion=="edit"){
