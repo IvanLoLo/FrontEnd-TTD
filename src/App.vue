@@ -180,7 +180,7 @@ body {
   padding: 0;
   margin-right: 1vw;
 
-  font-size: 0.8vw;
+  font-size: 0.7vw;
 }
 
 .header nav button:hover {
