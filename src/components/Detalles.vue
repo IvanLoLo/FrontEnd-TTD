@@ -291,10 +291,11 @@ export default {
   margin: 0 0 0 0;
   width: 50vw;
   order: 0;
+  word-wrap: break-word;
 }
 
 .detalles h2 {
-  font-size: 1.5vw;
+  font-size: 1.4vw;
   color: #283747;
 }
 
@@ -306,7 +307,7 @@ export default {
 }
 
 .detalles2 h2 {
-  font-size: 1.5vw;
+  font-size: 1.4vw;
   color: #283747;
 }
 

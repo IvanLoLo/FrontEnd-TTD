@@ -2,8 +2,19 @@
   <div class="informacionH">
     <h1>Detalles del pedido: {{ deliveryById.id }}</h1>
     <form v-on:submit.prevent="processLogInUser">
-        <input type="text" v-model="idCon" placeholder="#ID" style="margin: 10px 20px 0px 20px;"/>
-        <button type="submit"  v-on:click="consultaId(idCon)" style="margin-top: 10px; height: 46px;">Consultar</button>
+      <input
+        type="text"
+        v-model="idCon"
+        placeholder="#ID"
+        style="margin: 10px 20px 0px 20px;"
+      />
+      <button
+        type="submit"
+        v-on:click="consultaId(idCon)"
+        style="margin-top: 10px; height: 46px;"
+      >
+        Consultar
+      </button>
     </form>
   </div>
   <div class="informacion">
@@ -60,7 +71,9 @@
             .reverse()
             .join("/")
         }}</span>
-        <span v-if="!deliveryById.pickUpDate && most">El pedido aún no se recoge</span>
+        <span v-if="!deliveryById.pickUpDate && most"
+          >El pedido aún no se recoge</span
+        >
       </h2>
 
       <h2>
@@ -72,7 +85,9 @@
             .reverse()
             .join("/")
         }}</span>
-        <span v-if="!deliveryById.pickUpDate && most">El pedido aún no se entrega</span>
+        <span v-if="!deliveryById.pickUpDate && most"
+          >El pedido aún no se entrega</span
+        >
       </h2>
 
       <h2>
@@ -111,10 +126,20 @@
     />
   </div>
   <div class="cajaB">
-    <button class="btnE" v-if="permisos()" v-show="mostButton" v-on:click="editService()">
+    <button
+      class="btnE"
+      v-if="permisos()"
+      v-show="mostButton"
+      v-on:click="editService()"
+    >
       Editar pedido
     </button>
-    <button class="btnC" v-if="permisos()" v-show="mostButton" v-on:click="deleteService()">
+    <button
+      class="btnC"
+      v-if="permisos()"
+      v-show="mostButton"
+      v-on:click="deleteService()"
+    >
       Cancelar pedido
     </button>
   </div>
@@ -156,81 +181,100 @@ export default {
   },
 
   methods: {
-    consultaId: async function(id){
-        this.most = false;
-        this.most2 = false,
-        this.most3 = false,
-        this.most4 = false,
-        this.most5 = false,
-        this.mostButton = false,
-
+    consultaId: async function(id) {
+      this.most = false;
+      (this.most2 = false),
+        (this.most3 = false),
+        (this.most4 = false),
+        (this.most5 = false),
+        (this.mostButton = false),
         await this.$apollo
-        .query({
+          .query({
             query: gql`
-                query($deliveryId: String!) {
-                    deliveryById(deliveryId: $deliveryId) {
-                        id
-                        usernameEmisor
-                        usernameReceptor
-                        ciudadOrigen
-                        ciudadDestino
-                        direccionOrigen
-                        direccionDestino
-                        description
-                        estado
-                        value
-                        pickUpDate
-                        deliverDate
-                        pqr
-                    }
+              query($deliveryId: String!) {
+                deliveryById(deliveryId: $deliveryId) {
+                  id
+                  usernameEmisor
+                  usernameReceptor
+                  ciudadOrigen
+                  ciudadDestino
+                  direccionOrigen
+                  direccionDestino
+                  description
+                  estado
+                  value
+                  pickUpDate
+                  deliverDate
+                  pqr
                 }
+              }
             `,
             variables: {
-                deliveryId: id,
+              deliveryId: id,
             },
-        })
-        .then((result) => {
+          })
+          .then((result) => {
             this.deliveryById = {
-                id: result.data.deliveryById.id,
-                usernameEmisor: result.data.deliveryById.usernameEmisor,
-                usernameReceptor: result.data.deliveryById.usernameReceptor,
-                ciudadOrigen: result.data.deliveryById.ciudadOrigen,
-                ciudadDestino: result.data.deliveryById.ciudadDestino,
-                direccionOrigen: result.data.deliveryById.direccionOrigen,
-                direccionDestino: result.data.deliveryById.direccionDestino,
-                value: result.data.deliveryById.value,
-                estado: result.data.deliveryById.estado,
-                description: result.data.deliveryById.description,
-                pickUpDate: result.data.deliveryById.pickUpDate,
-                deliverDate: result.data.deliveryById.deliverDate,
-                pqr: result.data.deliveryById.pqr,
-            }
-            if(this.deliveryById.pickUpDate) this.deliveryById.pickUpDate = this.deliveryById.pickUpDate.substring(0,10);
-            if(this.deliveryById.deliverDate) this.deliveryById.deliverDate = this.deliveryById.deliverDate.substring(0,10);
+              id: result.data.deliveryById.id,
+              usernameEmisor: result.data.deliveryById.usernameEmisor,
+              usernameReceptor: result.data.deliveryById.usernameReceptor,
+              ciudadOrigen: result.data.deliveryById.ciudadOrigen,
+              ciudadDestino: result.data.deliveryById.ciudadDestino,
+              direccionOrigen: result.data.deliveryById.direccionOrigen,
+              direccionDestino: result.data.deliveryById.direccionDestino,
+              value: result.data.deliveryById.value,
+              estado: result.data.deliveryById.estado,
+              description: result.data.deliveryById.description,
+              pickUpDate: result.data.deliveryById.pickUpDate,
+              deliverDate: result.data.deliveryById.deliverDate,
+              pqr: result.data.deliveryById.pqr,
+            };
+            if (this.deliveryById.pickUpDate)
+              this.deliveryById.pickUpDate = this.deliveryById.pickUpDate.substring(
+                0,
+                10
+              );
+            if (this.deliveryById.deliverDate)
+              this.deliveryById.deliverDate = this.deliveryById.deliverDate.substring(
+                0,
+                10
+              );
             this.mostrar();
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.log(error);
-            if(this.idCon == "" || this.idCon == null) alert("Por favor ingrese un codigo de identificación de pedido");
-            else alert("No se encontro un pedido con el codifo de indentificación: "+this.idCon);
+            if (this.idCon == "" || this.idCon == null)
+              alert("Por favor ingrese un codigo de identificación de pedido");
+            else
+              alert(
+                "No se encontro un pedido con el codifo de indentificación: " +
+                  this.idCon
+              );
             this.idCon = "";
-        });
+          });
     },
 
-    permisos: function(){
-        console.log("Permisos");
-        if(localStorage.getItem("username")) this.userId = jwt_decode(localStorage.getItem("token_refresh")).user_id;
-        return this.deliveryById.usernameEmisor == localStorage.getItem("username") || this.userId == 1;
+    permisos: function() {
+      console.log("Permisos");
+      if (localStorage.getItem("username"))
+        this.userId = jwt_decode(localStorage.getItem("token_refresh")).user_id;
+      return (
+        this.deliveryById.usernameEmisor == localStorage.getItem("username") ||
+        this.userId == 1
+      );
     },
 
     editService: function(id) {
       console.log("Editar servicio");
-      this.$router.push({ name: "formServicesEdit", params: { deliver: this.idCon } });
+      this.$router.push({
+        name: "formServicesEdit",
+        params: { deliver: this.idCon },
+      });
     },
 
     deleteService: function(id) {
       let confirmar = confirm("¿Está seguro que desea eliminar este servicio?");
-      if(!confirmar) return;
+      if (!confirmar) return;
       console.log("Eliminando servicio");
       this.$apollo.mutate({
         mutation: gql`
@@ -243,8 +287,12 @@ export default {
         },
       });
       alert("Pedido Eliminado");
-      if(this.userId == 1) window.location.href = window.location.href.split("user/")[0]+"administration/services";
-      else window.location.href = window.location.href.split("user/")[0]+"user/services";
+      if (this.userId == 1)
+        window.location.href =
+          window.location.href.split("user/")[0] + "administration/services";
+      else
+        window.location.href =
+          window.location.href.split("user/")[0] + "user/services";
     },
 
     mostrar() {
@@ -305,9 +353,9 @@ export default {
 }
 
 .informacionH form {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
 }
 
 .informacion {
@@ -344,7 +392,7 @@ export default {
 }
 
 .detalles h2 {
-  font-size: 1.5vw;
+  font-size: 1.4vw;
   color: #283747;
 }
 
@@ -356,7 +404,7 @@ export default {
 }
 
 .detalles2 h2 {
-  font-size: 1.5vw;
+  font-size: 1.4vw;
   color: #283747;
 }
 
